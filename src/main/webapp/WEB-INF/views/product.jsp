@@ -63,7 +63,7 @@
                             <p class="inventory-category"><%= ViewUtil.escapeHtml(product.getCategoryName()) %></p>
                             <h3 id="product-title-<%= ViewUtil.escapeHtml(product.getId()) %>"><%= ViewUtil.escapeHtml(product.getName()) %></h3>
                             <div class="inventory-price-row">
-                                <strong class="inventory-price"><%= String.format("%,d", product.getPrice()) %> &#8363;</strong>
+                                <strong class="inventory-price"><%= ViewUtil.formatCurrency(product.getPrice()) %></strong>
                                 <span class="inventory-stock<%= product.getStock() <= 5 ? " inventory-stock-low" : "" %>">Tồn kho: <%= product.getStock() %></span>
                             </div>
                             <dl class="inventory-dates">
@@ -114,7 +114,7 @@
                     <label for="product-name">Tên sản phẩm</label>
                     <input id="product-name" type="text" name="name" required value="<%= ViewUtil.escapeHtml(name) %>">
                     <div class="management-field-row">
-                        <div><label for="product-price">Giá (VNĐ)</label><input id="product-price" type="number" name="price" min="0" step="1" required value="<%= ViewUtil.escapeHtml(price) %>"></div>
+                        <div><label for="product-price">Giá (₫)</label><input id="product-price" type="number" name="price" min="0" step="1" required value="<%= ViewUtil.escapeHtml(price) %>"></div>
                         <div><label for="product-stock">Tồn kho</label><input id="product-stock" type="number" name="stock" min="0" step="1" required value="<%= ViewUtil.escapeHtml(stock) %>"></div>
                     </div>
                     <label for="product-manufacture-date">Ngày sản xuất</label>

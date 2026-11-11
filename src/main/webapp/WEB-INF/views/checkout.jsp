@@ -3,6 +3,7 @@
 <%@ page import="java.util.Map" %>
 
 <%@ page import="com.market.model.CartItem" %>
+<%@ page import="com.market.util.ViewUtil" %>
 
 <%!
     private String escapeHtml(
@@ -396,12 +397,7 @@
 
                             <div class="small">
 
-                                <%=String.format(
-                                    "%,d",
-                                    item.getPrice()
-                            )%>
-
-                                VNĐ
+                                <%= ViewUtil.formatCurrency(item.getPrice()) %>
 
                                 ×
 
@@ -413,12 +409,7 @@
 
                         <div class="price">
 
-                            <%=String.format(
-                                "%,d",
-                                item.getSubtotal()
-                        )%>
-
-                            VNĐ
+                            <%= ViewUtil.formatCurrency(item.getSubtotal()) %>
 
                         </div>
 
@@ -458,14 +449,7 @@
 
                         <span>
 
-                            <%=String.format(
-                                    "%,d",
-                                    cartTotal == null
-                                    ? 0L
-                                    : cartTotal
-                    )%>
-
-                            VNĐ
+                            <%= ViewUtil.formatCurrency(cartTotal == null ? 0L : cartTotal) %>
 
                         </span>
 

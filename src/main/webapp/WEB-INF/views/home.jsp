@@ -166,7 +166,7 @@
           <% } %>
           <h3><%= ViewUtil.escapeHtml(product.getName()) %></h3>
           <div class="product-footer">
-            <span class="price"><%= String.format("%,d", product.getPrice()) %> &#8363;</span>
+            <span class="price"><%= ViewUtil.formatCurrency(product.getPrice()) %></span>
             <form class="shop-cart-form" method="post" action="<%= request.getContextPath() %>/cart">
               <input type="hidden" name="action" value="add" />
               <input type="hidden" name="returnTo" value="<%= request.getContextPath() %>/home" />

@@ -83,7 +83,7 @@
                         <span>(4.5)</span>
                     </div>
                     <div class="product-footer">
-                        <span class="price"><%= String.format("%,d", product.getPrice()) %> ₫</span>
+                        <span class="price"><%= ViewUtil.formatCurrency(product.getPrice()) %></span>
                         <form class="shop-cart-form" method="post" action="<%= request.getContextPath() %>/cart">
                             <input type="hidden" name="action" value="add">
                             <input type="hidden" name="returnTo" value="<%= request.getContextPath() %>/shop">

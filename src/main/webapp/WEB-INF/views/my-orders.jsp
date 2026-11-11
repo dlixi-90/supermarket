@@ -358,14 +358,7 @@
 
                 <div class="money">
 
-                    <%=
-                        String.format(
-                                "%,d",
-                                item.getPrice()
-                        )
-                    %>
-
-                    VNĐ
+                    <%= ViewUtil.formatCurrency(item.getPrice()) %>
 
                 </div>
 
@@ -387,14 +380,7 @@
 
                     <strong>
 
-                        <%=
-                            String.format(
-                                    "%,d",
-                                    item.getSubtotal()
-                            )
-                        %>
-
-                        VNĐ
+                        <%= ViewUtil.formatCurrency(item.getSubtotal()) %>
 
                     </strong>
 
@@ -536,14 +522,7 @@
 
             <span class="total">
 
-                <%=
-                    String.format(
-                            "%,d",
-                            order.getTotalAmount()
-                    )
-                %>
-
-                VNĐ
+                <%= ViewUtil.formatCurrency(order.getTotalAmount()) %>
 
             </span>
 

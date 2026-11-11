@@ -191,14 +191,7 @@
 
             <td>
 
-                <%=
-                    String.format(
-                            "%,d",
-                            item.getPrice()
-                    )
-                %>
-
-                VNĐ
+                <%= ViewUtil.formatCurrency(item.getPrice()) %>
 
             </td>
 
@@ -249,14 +242,7 @@
 
             <td>
 
-                <%=
-                    String.format(
-                            "%,d",
-                            item.getSubtotal()
-                    )
-                %>
-
-                VNĐ
+                <%= ViewUtil.formatCurrency(item.getSubtotal()) %>
 
             </td>
 
@@ -332,16 +318,7 @@
 
             <strong>
 
-                <%=
-                    String.format(
-                            "%,d",
-                            cartTotal == null
-                            ? 0L
-                            : cartTotal
-                    )
-                %>
-
-                VNĐ
+                <%= ViewUtil.formatCurrency(cartTotal == null ? 0L : cartTotal) %>
 
             </strong>
 

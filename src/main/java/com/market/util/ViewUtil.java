@@ -1,8 +1,14 @@
 package com.market.util;
 
+import java.util.Locale;
+
 public class ViewUtil {
 
     private ViewUtil() {
+    }
+
+    public static String formatCurrency(long value) {
+        return String.format(Locale.forLanguageTag("vi-VN"), "%,d ₫", value);
     }
 
 

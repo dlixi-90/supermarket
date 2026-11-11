@@ -5,6 +5,7 @@
 
 <%@ page import="com.market.model.Order" %>
 <%@ page import="com.market.model.OrderItem" %>
+<%@ page import="com.market.util.ViewUtil" %>
 
 <%!
     private String escapeHtml(
@@ -345,12 +346,7 @@
 
                                 <td class="money">
 
-                                    <%=String.format(
-                                            "%,d",
-                                            item.getPrice()
-                                    )%>
-
-                                    VNĐ
+                                    <%= ViewUtil.formatCurrency(item.getPrice()) %>
 
                                 </td>
 
@@ -364,13 +360,7 @@
 
                                     <strong>
 
-                                        <%=String.format(
-                                                "%,d",
-                                                item
-                                                        .getSubtotal()
-                                        )%>
-
-                                        VNĐ
+                                        <%= ViewUtil.formatCurrency(item.getSubtotal()) %>
 
                                     </strong>
 
@@ -642,12 +632,7 @@
 
                         <span class="total">
 
-                            <%=String.format(
-                                    "%,d",
-                                    order.getTotalAmount()
-                            )%>
-
-                            VNĐ
+                            <%= ViewUtil.formatCurrency(order.getTotalAmount()) %>
 
                         </span>
 

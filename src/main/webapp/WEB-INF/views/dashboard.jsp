@@ -53,7 +53,7 @@
         <section class="stats-grid dashboard-metrics" aria-label="Thống kê cửa hàng">
             <a class="card" href="<%= contextPath %>/orders?status=Delivered">
                 <div class="metric-heading"><span class="card-label">Doanh thu đơn đã giao</span><i class="ri-wallet-3-line" aria-hidden="true"></i></div>
-                <div class="card-number"><%= number(revenue) %> <small>₫</small></div>
+                <div class="card-number"><%= ViewUtil.formatCurrency(revenue) %></div>
                 <p class="card-note">Từ <%= number(counts[3]) %> đơn đã giao</p>
             </a>
             <a class="card" href="<%= contextPath %>/orders">
@@ -114,7 +114,7 @@
                         <td><a class="dashboard-order-link" href="<%= contextPath %>/orders#order-<%= ViewUtil.escapeHtml(orderId) %>" title="<%= ViewUtil.escapeHtml(orderId) %>">#<%= ViewUtil.escapeHtml(shortId) %></a><span class="small dashboard-date"><%= order.getOrderDate() == null ? "" : dateFormat.format(order.getOrderDate()) %></span></td>
                         <td><%= ViewUtil.escapeHtml(order.getRecipientName()) %></td>
                         <td><span class="status <%= ViewUtil.escapeHtml(status.toLowerCase(Locale.ROOT)) %>"><%= ViewUtil.escapeHtml(statusLabel(status)) %></span></td>
-                        <td class="money"><%= number(order.getTotalAmount()) %> ₫</td>
+                        <td class="money"><%= ViewUtil.formatCurrency(order.getTotalAmount()) %></td>
                     </tr>
                     <% } %>
                     </tbody>
