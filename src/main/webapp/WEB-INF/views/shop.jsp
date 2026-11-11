@@ -51,7 +51,7 @@
             </aside>
         <section class="products shop-results" id="products" aria-label="Sản phẩm">
             <div class="heading">
-                <h2>Sản phẩm tươi ngon</h2>
+                <h2>Sản phẩm</h2>
             </div>
             <div class="product-container">
                 <% if (products != null) { for (Product product : products) {

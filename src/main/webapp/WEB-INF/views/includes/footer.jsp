@@ -20,7 +20,7 @@
         </div>
         <div class="contact-item">
           <i class="ri-time-line"></i>
-          <span>10:00 - 18:00, Thứ Hai - Thứ Bảy</span>
+          <span>10:00 - 22:00, Thứ Hai - Thứ Bảy</span>
         </div>
       </div>
     </div>

@@ -46,7 +46,7 @@ test('cart uses the form URL even when a control shadows form.action', async () 
   const calls = [];
   const ui = setup(async (url, options) => {
     calls.push({ url, options });
-    return { ok: true, json: async () => ({ success: true, quantity: 1 }) };
+    return { ok: true, json: async () => ({ success: true, quantity: 1, message: 'Đã thêm sản phẩm vào giỏ hàng.' }) };
   });
   const submit = ui.submit();
   await submit.completion;
@@ -54,7 +54,7 @@ test('cart uses the form URL even when a control shadows form.action', async () 
   assert.equal(calls[0].options.body.get('action'), 'add');
   assert.equal(calls[0].options.credentials, 'same-origin');
   assert.equal(submit.button.disabled, false);
-  assert.equal(ui.notices[0].type, 'success');
+  assert.equal(ui.notices.length, 0);
 });
 
 test('rapid adds wait for the previous response so the count cannot move backwards', async () => {
@@ -73,7 +73,7 @@ test('rapid adds wait for the previous response so the count cannot move backwar
   release();
   await Promise.all([first.completion, second.completion]);
   assert.deepEqual(calls, ['1', '2']);
-  assert.equal(ui.notices.length, 2);
+  assert.equal(ui.notices.length, 0);
 });
 
 test('a non JSON failure restores the button and leaves the request queue usable', async () => {
@@ -88,6 +88,6 @@ test('a non JSON failure restores the button and leaves the request queue usable
   assert.equal(first.button.disabled, false);
   assert.equal(ui.notices[0].type, 'error');
   await ui.submit().completion;
-  assert.equal(ui.notices[1].type, 'success');
+  assert.equal(ui.notices.length, 1);
   assert.equal(count, 2);
 });

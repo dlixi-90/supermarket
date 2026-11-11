@@ -139,7 +139,6 @@ document.addEventListener('submit', async (event) => {
       void cartLink.offsetWidth;
       cartLink.classList.add('cart-link-added');
     }
-    window.showToast?.(result.message || 'Đã thêm sản phẩm vào giỏ hàng.', 'success');
   } catch (error) {
     window.showToast?.(error.message || 'Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.', 'error');
   } finally {

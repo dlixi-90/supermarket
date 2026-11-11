@@ -74,7 +74,7 @@
             }
             int productCount = categoryCounts.getOrDefault(category.getId(), 0);
         %>
-        <a class="box box<%= categoryIndex++ % 6 + 1 %>" href="<%= request.getContextPath() %>/home?category=<%= ViewUtil.escapeHtml(category.getId()) %>#products">
+        <a class="box box<%= categoryIndex++ % 6 + 1 %>" href="<%= request.getContextPath() %>/shop?category=<%= ViewUtil.escapeHtml(category.getId()) %>">
           <% if (imageUrl == null || imageUrl.isEmpty()) { %>
           <div class="category-placeholder" role="img" aria-label="Danh mục chưa có ảnh"><i class="ri-image-line"></i></div>
           <% } else { %>
