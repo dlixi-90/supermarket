@@ -1,8 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.util.List,com.market.model.Product,com.market.model.Category,com.market.util.ViewUtil" %>
+<%@ page import="java.util.List,java.util.Map,java.util.HashMap,com.market.model.Product,com.market.model.Category,com.market.util.ViewUtil" %>
 <%
     List<Product> products = (List<Product>) request.getAttribute("products");
     List<Category> categories = (List<Category>) request.getAttribute("categories");
+    Map<String, Integer> categoryColors = new HashMap<>();
+    if (categories != null) {
+        for (int i = 0; i < categories.size(); i++) {
+            categoryColors.put(categories.get(i).getId(), i % 6 + 1);
+        }
+    }
 %>
 <!doctype html>
 <html lang="vi">
@@ -55,7 +61,7 @@
                         imageUrl = request.getContextPath() + "/" + imageUrl.replaceFirst("^/+", "");
                     }
                 %>
-                <article class="product-box" data-category="<%= ViewUtil.escapeHtml(product.getCategoryId()) %>" data-price="<%= product.getPrice() %>">
+                <article class="product-box box<%= categoryColors.getOrDefault(product.getCategoryId(), 1) %>" data-category="<%= ViewUtil.escapeHtml(product.getCategoryId()) %>" data-price="<%= product.getPrice() %>">
                     <% if (product.getStock() <= 0) { %>
                     <span class="badge badge-out">Hết hàng</span>
                     <% } else { %>

@@ -364,6 +364,12 @@ body[data-page="home"] .filter-buttons {
   flex-direction: column;
   transition: all 0.3s ease;
 }
+.product-box.box1 { background: #fef4ea; }
+.product-box.box2 { background: #e9f4e3; }
+.product-box.box3 { background: #faeaea; }
+.product-box.box4 { background: #eeeef9; }
+.product-box.box5 { background: #f7f6d7; }
+.product-box.box6 { background: #ffefeb; }
 .product-box:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);

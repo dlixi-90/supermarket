@@ -4,6 +4,12 @@
     List<Category> categories = (List<Category>) request.getAttribute("categories");
     List<Product> products = (List<Product>) request.getAttribute("products");
     Map<String, Integer> categoryCounts = (Map<String, Integer>) request.getAttribute("categoryCounts");
+    Map<String, Integer> categoryColors = new java.util.HashMap<>();
+    if (categories != null) {
+        for (int i = 0; i < categories.size(); i++) {
+            categoryColors.put(categories.get(i).getId(), i % 6 + 1);
+        }
+    }
     int homeCategoryLimit = 6;
     int homeProductLimit = 8;
 %>
@@ -138,7 +144,7 @@
                 imageUrl = request.getContextPath() + "/" + imageUrl.replaceFirst("^/+", "");
             }
         %>
-        <article class="product-box" data-category="<%= ViewUtil.escapeHtml(product.getCategoryId()) %>" <%= productIndex++ >= homeProductLimit ? "hidden" : "" %>>
+        <article class="product-box box<%= categoryColors.getOrDefault(product.getCategoryId(), 1) %>" data-category="<%= ViewUtil.escapeHtml(product.getCategoryId()) %>" <%= productIndex++ >= homeProductLimit ? "hidden" : "" %>>
           <% if (product.getStock() <= 0) { %>
           <span class="badge badge-out">Hết hàng</span>
           <% } else { %>
