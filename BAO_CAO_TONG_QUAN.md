@@ -30,6 +30,7 @@ Giỏ hàng được lưu trong HTTP session trong quá trình mua sắm; không
 ### Khách chưa đăng nhập
 
 - Xem trang chủ, danh mục và cửa hàng.
+- Thêm sản phẩm vào giỏ hàng, xem và cập nhật giỏ hàng theo phiên duyệt web.
 - Đăng ký hoặc đăng nhập.
 
 ### Khách hàng
@@ -59,7 +60,7 @@ Giỏ hàng được lưu trong HTTP session trong quá trình mua sắm; không
 
 `/home`, `/shop`, `/login`, `/register`, `/cart`, `/checkout`, `/place-order`, `/my-orders`, `/dashboard`, `/users`, `/categories`, `/products`, `/orders`.
 
-Các trang `/cart`, `/checkout`, `/place-order` và `/my-orders` yêu cầu đăng nhập. Các trang `/dashboard`, `/users`, `/categories`, `/products` và `/orders` được giới hạn cho vai trò quản trị viên.
+Các trang `/checkout`, `/place-order` và `/my-orders` yêu cầu đăng nhập. Khách chưa đăng nhập có thể thêm và xem giỏ hàng (`/cart`), và sẽ được yêu cầu đăng nhập khi tiến hành thanh toán. Các trang `/dashboard`, `/users`, `/categories`, `/products` và `/orders` được giới hạn cho vai trò quản trị viên.
 
 ## 7. Tóm tắt
 

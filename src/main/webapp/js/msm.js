@@ -96,15 +96,26 @@ document.addEventListener('submit', async (event) => {
       method: 'POST',
       body: formData,
       credentials: 'same-origin',
-      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      }
     });
-    const result = await response.json();
-    if (result.requiresLogin && result.loginUrl) {
+
+    let result;
+    try {
+      result = await response.json();
+    } catch {
+      result = null;
+    }
+
+    if (result && result.requiresLogin && result.loginUrl) {
       window.location.assign(result.loginUrl);
       return;
     }
-    if (!response.ok || !result.success) {
-      throw new Error(result.message || 'Không thể thêm sản phẩm vào giỏ hàng.');
+
+    if (!response.ok || !result || !result.success) {
+      throw new Error((result && result.message) || 'Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.');
     }
 
     const cartLink = document.querySelector('.cart-link');

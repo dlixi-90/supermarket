@@ -50,25 +50,6 @@ public class CartServlet extends HttpServlet {
         HttpSession session =
                 request.getSession(false);
 
-        if (session != null
-                && session.getAttribute("pendingCartProductId") != null
-                && session.getAttribute("pendingCartQuantity") != null) {
-            String pendingProductId = (String) session.getAttribute("pendingCartProductId");
-            String pendingQuantity = (String) session.getAttribute("pendingCartQuantity");
-            session.removeAttribute("pendingCartProductId");
-            session.removeAttribute("pendingCartQuantity");
-
-            try {
-                addToCart(pendingProductId, pendingQuantity, session);
-                session.setAttribute("cartItemAdded", Boolean.TRUE);
-                response.sendRedirect(request.getContextPath() + "/cart");
-                return;
-            } catch (IllegalArgumentException e) {
-                request.setAttribute("error", e.getMessage());
-            }
-        }
-
-
         Map<String, CartItem> cart =
                 getCart(session);
 

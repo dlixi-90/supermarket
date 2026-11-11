@@ -5,6 +5,7 @@ import com.market.model.User;
 import com.market.util.PasswordUtil;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -172,16 +173,17 @@ public class LoginServlet extends HttpServlet {
 
             // =================================
             // PREVENT SESSION FIXATION
+            // Giữ lại giỏ hàng và chuyển hướng
             // =================================
             HttpSession oldSession
                     = request.getSession(false);
 
-            Object pendingCartProductId = oldSession == null
+            Object savedCart = oldSession == null
                     ? null
-                    : oldSession.getAttribute("pendingCartProductId");
-            Object pendingCartQuantity = oldSession == null
+                    : oldSession.getAttribute("cart");
+            Object redirectAfterLogin = oldSession == null
                     ? null
-                    : oldSession.getAttribute("pendingCartQuantity");
+                    : oldSession.getAttribute("redirectAfterLogin");
 
             if (oldSession != null) {
 
@@ -214,9 +216,8 @@ public class LoginServlet extends HttpServlet {
                     user.getRole()
             );
 
-            if (pendingCartProductId != null && pendingCartQuantity != null) {
-                session.setAttribute("pendingCartProductId", pendingCartProductId);
-                session.setAttribute("pendingCartQuantity", pendingCartQuantity);
+            if (savedCart != null) {
+                session.setAttribute("cart", savedCart);
             }
 
             // 30 phút
@@ -225,13 +226,21 @@ public class LoginServlet extends HttpServlet {
             );
 
             // =================================
-            // QUAN TRỌNG:
-            //
-            // Admin và Customer đều về /home
+            // CHUYỂN HƯỚNG
             // =================================
-            String destination = pendingCartProductId != null && pendingCartQuantity != null
-                    ? "/cart"
-                    : "/home";
+            String destination;
+            String contextPath = request.getContextPath();
+            if (redirectAfterLogin instanceof String
+                    && ((String) redirectAfterLogin).startsWith(contextPath)) {
+                destination = ((String) redirectAfterLogin).substring(contextPath.length());
+                if (!destination.startsWith("/")) {
+                    destination = "/" + destination;
+                }
+            } else if (savedCart instanceof Map<?, ?> && !((Map<?, ?>) savedCart).isEmpty()) {
+                destination = "/cart";
+            } else {
+                destination = "/home";
+            }
             response.sendRedirect(request.getContextPath() + destination);
 
         } catch (Exception e) {
