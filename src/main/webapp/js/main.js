@@ -33,7 +33,9 @@ if (document.body.dataset.page === "home" && typeof window.ScrollReveal === "fun
   animate.reveal(".home-text, .shipping-content", { origin: "left" });
   animate.reveal(".home-img", { origin: "bottom" });
   animate.reveal(".shipping-image", { origin: "right" });
-  animate.reveal(".box, .banner-box, .product-box, .footer-col", {
+  // Product cards are filtered after load; ScrollReveal can leave cards that
+  // started with the hidden attribute invisible after a category is selected.
+  animate.reveal(".box, .banner-box, .footer-col", {
     interval: 100,
   });
 }
