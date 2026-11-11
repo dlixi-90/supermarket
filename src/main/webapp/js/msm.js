@@ -243,7 +243,8 @@ document.querySelectorAll(".filter-buttons").forEach((group) => {
       let visible = 0;
       cards.forEach((card) => {
         const cardCategory = card.dataset.category || normalize(card.querySelector(".category").textContent);
-        card.hidden = (category !== "all" && cardCategory !== category) || visible >= productLimit;
+        const matchesCategory = category === "all" || cardCategory === category;
+        card.hidden = !matchesCategory || (category === "all" && visible >= productLimit);
         if (!card.hidden) visible++;
       });
       const empty = section.querySelector(".shop-empty");
@@ -257,6 +258,30 @@ document.querySelectorAll(".filter-buttons").forEach((group) => {
     if (selectedButton) selectedButton.click();
   }
 });
+
+document.querySelectorAll(".home-category-slider").forEach((slider) => {
+  const viewport = slider.querySelector(".home-category-viewport");
+  const track = slider.querySelector(".home-category-track");
+  const previous = slider.querySelector('[data-category-slide="prev"]');
+  const next = slider.querySelector('[data-category-slide="next"]');
+  if (!viewport || !track) return;
+  const scrollByCard = (direction) => {
+    const card = track.querySelector(".box");
+    const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 16;
+    viewport.scrollBy({ left: direction * ((card?.getBoundingClientRect().width || viewport.clientWidth / 5) + gap), behavior: "smooth" });
+  };
+  previous?.addEventListener("click", () => scrollByCard(-1));
+  next?.addEventListener("click", () => scrollByCard(1));
+  const updateButtons = () => {
+    const canScroll = viewport.scrollWidth > viewport.clientWidth + 1;
+    if (previous) previous.disabled = !canScroll || viewport.scrollLeft <= 1;
+    if (next) next.disabled = !canScroll || viewport.scrollLeft + viewport.clientWidth >= viewport.scrollWidth - 1;
+  };
+  viewport.addEventListener("scroll", updateButtons, { passive: true });
+  window.addEventListener("resize", updateButtons);
+  updateButtons();
+});
+
 const shopSidebar = document.querySelector(".shop-sidebar");
 if (shopSidebar) {
   const search = shopSidebar.querySelector('#shop-search');
@@ -265,6 +290,9 @@ if (shopSidebar) {
   const container = document.querySelector('.shop-results .product-container');
   const cards = [...container.querySelectorAll('.product-box')];
   const empty = document.querySelector('.shop-results .shop-empty');
+  const pagination = document.querySelector('.shop-pagination');
+  const pageSize = 9;
+  let currentPage = 1;
   const normalize = value => value.trim().toLocaleLowerCase();
   const products = cards.map((card, index) => ({
     card, index,
@@ -272,20 +300,51 @@ if (shopSidebar) {
     price: Number(card.dataset.price),
     category: card.dataset.category,
   }));
-  const updateShop = () => {
+  const renderPagination = pageCount => {
+    if (!pagination) return;
+    pagination.replaceChildren();
+    if (pageCount <= 1) return;
+    const makeButton = (label, page, { disabled = false, current = false, ariaLabel } = {}) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'shop-page-button';
+      button.textContent = label;
+      button.disabled = disabled;
+      if (current) {
+        button.classList.add('active');
+        button.setAttribute('aria-current', 'page');
+      }
+      if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
+      button.addEventListener('click', () => {
+        currentPage = page;
+        updateShop(false);
+        document.querySelector('.shop-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      pagination.appendChild(button);
+    };
+    makeButton('‹', currentPage - 1, { disabled: currentPage === 1, ariaLabel: 'Trang trước' });
+    for (let page = 1; page <= pageCount; page++) makeButton(String(page), page, { current: page === currentPage, ariaLabel: `Trang ${page}` });
+    makeButton('›', currentPage + 1, { disabled: currentPage === pageCount, ariaLabel: 'Trang sau' });
+  };
+  const updateShop = (resetPage = true) => {
+    if (resetPage) currentPage = 1;
     const query = normalize(search.value);
     const selected = new Set(categories.filter(input => input.checked).map(input => input.value));
     const sorted = [...products];
     if (sort.value === 'price-asc') sorted.sort((a, b) => a.price - b.price || a.index - b.index);
     if (sort.value === 'price-desc') sorted.sort((a, b) => b.price - a.price || a.index - b.index);
-    let visible = 0;
+    const matching = sorted.filter(product => product.name.includes(query) && (selected.size === 0 || selected.has(product.category)));
+    const pageCount = Math.ceil(matching.length / pageSize);
+    currentPage = Math.min(currentPage, Math.max(pageCount, 1));
+    const first = (currentPage - 1) * pageSize;
+    const pageProducts = new Set(matching.slice(first, first + pageSize).map(product => product.card));
     sorted.forEach(product => {
-      product.card.hidden = !product.name.includes(query) || (selected.size > 0 && !selected.has(product.category));
-      if (!product.card.hidden) visible++;
+      product.card.hidden = !pageProducts.has(product.card);
       container.appendChild(product.card);
     });
-    empty.hidden = visible > 0;
+    empty.hidden = matching.length > 0;
     empty.textContent = products.length === 0 ? 'Hiện chưa có sản phẩm.' : 'Không tìm thấy sản phẩm phù hợp với tìm kiếm và bộ lọc.';
+    renderPagination(pageCount);
   };
   const initialCategory = new URLSearchParams(window.location.search).get('category');
   categories.forEach(input => {

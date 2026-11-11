@@ -93,6 +93,7 @@
                 </article>
                 <% } } %>
             </div>
+            <nav class="shop-pagination" aria-label="Chuyển trang sản phẩm"></nav>
             <p class="shop-empty" role="status" <%= products != null && !products.isEmpty() ? "hidden" : "" %>>Chưa có sản phẩm.</p>
         </section>
         </div>

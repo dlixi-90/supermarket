@@ -53,14 +53,17 @@
     <!-- Categories -->
     <section class="categories container" id="categories">
       <!-- Heading -->
-      <div class="heading">
+      <div class="heading home-category-heading">
         <h2>Mua sắm theo danh mục</h2>
         <a href="<%= request.getContextPath() %>/shop" class="btn btn-rounded"
           >Xem tất cả <i class="ri-arrow-right-line"></i
         ></a>
       </div>
       <!-- Categories Container -->
-      <div class="categories-container">
+      <div class="home-category-slider">
+        <button type="button" class="category-slide-button" data-category-slide="prev" aria-label="Xem danh mục trước"><i class="ri-arrow-left-s-line" aria-hidden="true"></i></button>
+        <div class="home-category-viewport">
+        <div class="categories-container home-category-track">
         <% int categoryIndex = 0; for (Category category : categories) {
             if (categoryIndex >= homeCategoryLimit) break;
             String imageUrl = category.getImageUrl();
@@ -80,6 +83,9 @@
           <span><%= productCount %> sản phẩm</span>
         </a>
         <% } %>
+        </div>
+        </div>
+        <button type="button" class="category-slide-button" data-category-slide="next" aria-label="Xem danh mục tiếp theo"><i class="ri-arrow-right-s-line" aria-hidden="true"></i></button>
       </div>
       <% if (categories.isEmpty()) { %>
       <p class="shop-empty" role="status">Chưa có danh mục nào.</p>
