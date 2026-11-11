@@ -5,6 +5,7 @@
 
 <%@ page import="com.market.model.Order" %>
 <%@ page import="com.market.model.OrderItem" %>
+<%@ page import="com.market.util.ViewUtil" %>
 
 <%!
 
@@ -314,31 +315,38 @@
                         items
                     ) {
 
+                        String imageUrl = ViewUtil.resolveImageUrl(
+                                item.getImageUrl(),
+                                request.getContextPath()
+                        );
+
             %>
 
             <div class="item">
 
+                <% if (!imageUrl.isEmpty()) { %>
+                <img
+                    class="order-product-image"
+                    src="<%= escapeHtml(imageUrl) %>"
+                    alt="<%= escapeHtml(item.getProductName()) %>"
+                    loading="lazy"
+                    decoding="async"
+                >
+                <% } else { %>
+                <div class="order-product-image order-product-image-placeholder" aria-hidden="true">
+                    <i class="ri-image-line"></i>
+                </div>
+                <% } %>
+
                 <!-- NAME -->
 
-                <div>
+                <div class="item-details">
 
                     <div class="product-name">
 
                         <%=
                             escapeHtml(
                                 item.getProductName()
-                            )
-                        %>
-
-                    </div>
-
-                    <div class="small">
-
-                        Mã sản phẩm:
-
-                        <%=
-                            escapeHtml(
-                                item.getProductId()
                             )
                         %>
 

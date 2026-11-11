@@ -4,6 +4,7 @@ public class OrderItem {
 
     private String productId;
     private String productName;
+    private String imageUrl;
 
     private long price;
     private int quantity;
@@ -64,6 +65,14 @@ public class OrderItem {
             String productName) {
 
         this.productName = productName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 

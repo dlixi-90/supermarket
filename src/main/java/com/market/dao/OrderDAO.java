@@ -331,6 +331,7 @@ public class OrderDAO {
                             currentPrice,
                             quantity
                     );
+            orderItem.setImageUrl(productDoc.getString("imageUrl"));
 
             orderItems.add(
                     orderItem
@@ -540,6 +541,10 @@ public class OrderDAO {
                             .append(
                                     "productName",
                                     item.getProductName()
+                            )
+                            .append(
+                                    "imageUrl",
+                                    item.getImageUrl()
                             )
                             .append(
                                     "price",
@@ -766,6 +771,19 @@ public class OrderDAO {
                                         ? 0
                                         : subtotal.longValue()
                         );
+
+                String imageUrl = itemDoc.getString("imageUrl");
+                if ((imageUrl == null || imageUrl.isBlank())
+                        && ObjectId.isValid(productId)) {
+                    Document productDoc = productCollection
+                            .find(eq("_id", new ObjectId(productId)))
+                            .projection(new Document("imageUrl", 1))
+                            .first();
+                    if (productDoc != null) {
+                        imageUrl = productDoc.getString("imageUrl");
+                    }
+                }
+                orderItem.setImageUrl(imageUrl);
 
                 orderItems.add(
                         orderItem
