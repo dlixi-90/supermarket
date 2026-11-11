@@ -64,7 +64,7 @@
                     <% if (imageUrl == null || imageUrl.isEmpty()) { %>
                     <div class="product-img product-placeholder" aria-label="Chưa có ảnh sản phẩm"><i class="ri-image-line"></i></div>
                     <% } else { %>
-                    <img src="<%= ViewUtil.escapeHtml(imageUrl) %>" alt="<%= ViewUtil.escapeHtml(product.getName()) %>" class="product-img" loading="lazy">
+                    <img src="<%= ViewUtil.escapeHtml(imageUrl) %>" alt="<%= ViewUtil.escapeHtml(product.getName()) %>" class="product-img" loading="lazy" decoding="async">
                     <% } %>
                     <span class="category"><%= ViewUtil.escapeHtml(product.getCategoryName()) %></span>
                     <h3><%= ViewUtil.escapeHtml(product.getName()) %></h3>

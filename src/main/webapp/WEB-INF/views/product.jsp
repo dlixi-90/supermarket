@@ -54,7 +54,7 @@
                     <article class="inventory-card" aria-labelledby="product-title-<%= ViewUtil.escapeHtml(product.getId()) %>">
                         <div class="inventory-card-image">
                             <% if (!image.isEmpty()) { %>
-                            <img src="<%= ViewUtil.escapeHtml(image) %>" alt="<%= ViewUtil.escapeHtml(product.getName()) %>" loading="lazy">
+                            <img src="<%= ViewUtil.escapeHtml(image) %>" alt="<%= ViewUtil.escapeHtml(product.getName()) %>" loading="lazy" decoding="async">
                             <% } else { %>
                             <div class="inventory-image-placeholder"><i class="ri-image-line" aria-hidden="true"></i><span>Chưa có ảnh</span></div>
                             <% } %>

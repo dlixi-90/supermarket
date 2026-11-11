@@ -29,6 +29,8 @@
         src="<%= request.getContextPath() %>/images/hero1.png"
         alt=""
         class="home-img"
+        fetchpriority="high"
+        decoding="async"
       />
       <div class="home-text">
         <h1>
@@ -66,7 +68,7 @@
           <% if (imageUrl == null || imageUrl.isEmpty()) { %>
           <div class="category-placeholder" role="img" aria-label="Danh mục chưa có ảnh"><i class="ri-image-line"></i></div>
           <% } else { %>
-          <img src="<%= ViewUtil.escapeHtml(imageUrl) %>" alt="<%= ViewUtil.escapeHtml(category.getName()) %>" loading="lazy" />
+          <img src="<%= ViewUtil.escapeHtml(imageUrl) %>" alt="<%= ViewUtil.escapeHtml(category.getName()) %>" loading="lazy" decoding="async" />
           <% } %>
           <h2><%= ViewUtil.escapeHtml(category.getName()) %></h2>
           <span><%= productCount %> sản phẩm</span>
@@ -92,6 +94,8 @@
             src="<%= request.getContextPath() %>/images/banner-1.png"
             alt=""
             class="banner-img"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <div class="banner-box banner-2">
@@ -106,6 +110,8 @@
             src="<%= request.getContextPath() %>/images/banner-2.png"
             alt=""
             class="banner-img"
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </div>
@@ -141,7 +147,7 @@
           <% if (imageUrl == null || imageUrl.isEmpty()) { %>
           <div class="product-img product-placeholder" role="img" aria-label="Chưa có ảnh sản phẩm"><i class="ri-image-line"></i></div>
           <% } else { %>
-          <img src="<%= ViewUtil.escapeHtml(imageUrl) %>" alt="<%= ViewUtil.escapeHtml(product.getName()) %>" class="product-img" loading="lazy" />
+          <img src="<%= ViewUtil.escapeHtml(imageUrl) %>" alt="<%= ViewUtil.escapeHtml(product.getName()) %>" class="product-img" loading="lazy" decoding="async" />
           <% } %>
           <span class="category"><%= ViewUtil.escapeHtml(product.getCategoryName()) %></span>
           <h3><%= ViewUtil.escapeHtml(product.getName()) %></h3>
@@ -175,6 +181,8 @@
           <img
             src="<%= request.getContextPath() %>/images/scooter-3d.png"
             alt="scooter"
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </div>
@@ -185,7 +193,7 @@
 
     <!-- Link To JS -->
 
-    <script src="https://unpkg.com/scrollreveal"></script>
+    <script defer src="https://unpkg.com/scrollreveal"></script>
     <jsp:include page="/WEB-INF/views/includes/scripts.jsp" />
   </body>
 </html>

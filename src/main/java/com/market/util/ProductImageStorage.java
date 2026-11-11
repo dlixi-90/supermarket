@@ -16,6 +16,7 @@ import javax.servlet.http.Part;
 public final class ProductImageStorage {
     public static final long MAX_FILE_SIZE = 5L * 1024 * 1024;
     private static final long MAX_PIXELS = 20_000_000;
+    private static final int MAX_IMAGE_DIMENSION = 1600;
 
     private ProductImageStorage() { }
 
@@ -54,6 +55,7 @@ public final class ProductImageStorage {
             throw new IllegalArgumentException("The image could not be read. Choose another JPG or PNG file.", e);
         }
         if (image == null) throw new IllegalArgumentException("Choose a valid JPG or PNG image.");
+        image = resizeForWeb(image);
 
         String name = UUID.randomUUID() + (format.equals("jpeg") ? ".jpg" : ".png");
         Path directory = directory();
@@ -66,6 +68,34 @@ public final class ProductImageStorage {
             throw e;
         }
         return "uploads/products/" + name;
+    }
+
+    private static BufferedImage resizeForWeb(BufferedImage source) {
+        int width = source.getWidth();
+        int height = source.getHeight();
+        int longestSide = Math.max(width, height);
+        if (longestSide <= MAX_IMAGE_DIMENSION) return source;
+
+        double scale = (double) MAX_IMAGE_DIMENSION / longestSide;
+        int scaledWidth = Math.max(1, (int) Math.round(width * scale));
+        int scaledHeight = Math.max(1, (int) Math.round(height * scale));
+        int imageType = source.getColorModel().hasAlpha()
+                ? BufferedImage.TYPE_INT_ARGB
+                : BufferedImage.TYPE_INT_RGB;
+        BufferedImage resized = new BufferedImage(scaledWidth, scaledHeight, imageType);
+        java.awt.Graphics2D graphics = resized.createGraphics();
+        try {
+            graphics.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION,
+                    java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            graphics.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING,
+                    java.awt.RenderingHints.VALUE_RENDER_QUALITY);
+            graphics.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+                    java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics.drawImage(source, 0, 0, scaledWidth, scaledHeight, null);
+        } finally {
+            graphics.dispose();
+        }
+        return resized;
     }
 
     public static Path find(String name) {

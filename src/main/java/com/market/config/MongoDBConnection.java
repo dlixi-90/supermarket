@@ -3,6 +3,12 @@ package com.market.config;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Properties;
 
 public class MongoDBConnection {
 
@@ -24,7 +30,19 @@ public class MongoDBConnection {
     private static String requireMongoUri() {
         String uri = System.getenv("MONGODB_URI");
         if (uri == null || uri.isBlank()) {
-            throw new IllegalStateException("MONGODB_URI environment variable is not set.");
+            Path envFile = Path.of(".env");
+            if (Files.isRegularFile(envFile)) {
+                Properties properties = new Properties();
+                try (Reader reader = Files.newBufferedReader(envFile, StandardCharsets.UTF_8)) {
+                    properties.load(reader);
+                    uri = properties.getProperty("MONGODB_URI");
+                } catch (IOException e) {
+                    throw new IllegalStateException("Unable to read MONGODB_URI from .env.", e);
+                }
+            }
+        }
+        if (uri == null || uri.isBlank()) {
+            throw new IllegalStateException("MONGODB_URI is not set in the environment or .env file.");
         }
         return uri;
     }

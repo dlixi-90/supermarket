@@ -39,7 +39,7 @@
                         String image = imageSource(request.getContextPath(), category.getImageUrl());
                     %>
                     <article class="product-box category-card">
-                        <% if (!image.isEmpty()) { %><img class="product-img" src="<%= ViewUtil.escapeHtml(image) %>" alt="<%= ViewUtil.escapeHtml(category.getName()) %>" loading="lazy"><% } else { %><div class="product-img product-placeholder" aria-label="Danh mục chưa có ảnh"><i class="ri-image-line" aria-hidden="true"></i></div><% } %>
+                        <% if (!image.isEmpty()) { %><img class="product-img" src="<%= ViewUtil.escapeHtml(image) %>" alt="<%= ViewUtil.escapeHtml(category.getName()) %>" loading="lazy" decoding="async"><% } else { %><div class="product-img product-placeholder" aria-label="Danh mục chưa có ảnh"><i class="ri-image-line" aria-hidden="true"></i></div><% } %>
                         <h3 title="<%= ViewUtil.escapeHtml(category.getName()) %>"><%= ViewUtil.escapeHtml(category.getName()) %></h3>
                         <div class="category-card-actions">
                             <button class="button secondary category-edit-button" type="button" data-id="<%= ViewUtil.escapeHtml(category.getId()) %>" data-name="<%= ViewUtil.escapeHtml(category.getName()) %>" data-image="<%= ViewUtil.escapeHtml(image) %>">Sửa</button>
