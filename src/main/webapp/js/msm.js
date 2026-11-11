@@ -78,6 +78,7 @@ document.querySelectorAll(".product-active-form").forEach((form) => {
   form.querySelector('[name="active"]').addEventListener("change", () => form.requestSubmit());
 });
 
+let cartRequestQueue = Promise.resolve();
 document.addEventListener('submit', async (event) => {
   const form = event.target.closest('form.shop-cart-form');
   if (!form) return;
@@ -89,10 +90,16 @@ document.addEventListener('submit', async (event) => {
   const originalDisabled = submitButton?.disabled ?? false;
   if (submitButton) submitButton.disabled = true;
 
+  const previousRequest = cartRequestQueue;
+  let completeRequest;
+  cartRequestQueue = new Promise(resolve => { completeRequest = resolve; });
+
   try {
+    await previousRequest;
     const formData = new URLSearchParams(new FormData(form));
     formData.set('action', 'add');
-    const response = await fetch(form.action, {
+    // A form control named "action" overrides form.action in the browser DOM.
+    const response = await fetch(form.getAttribute('action'), {
       method: 'POST',
       body: formData,
       credentials: 'same-origin',
@@ -137,6 +144,7 @@ document.addEventListener('submit', async (event) => {
     window.showToast?.(error.message || 'Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.', 'error');
   } finally {
     if (submitButton) submitButton.disabled = originalDisabled;
+    completeRequest();
   }
 });
 

@@ -37,8 +37,8 @@
                     "cartTotal"
             );
 
-    Integer cartQuantity =
-            (Integer)
+    Number cartQuantity =
+            (Number)
             request.getAttribute(
                     "cartQuantity"
             );

@@ -5,8 +5,10 @@ COPY src ./src
 RUN mvn -B -DskipTests package
 
 FROM tomcat:9.0-jdk17-temurin-jammy
-RUN sed -i 's/port="8080"/port="10000"/' "$CATALINA_HOME/conf/server.xml" \
+RUN sed -i -e 's/<Server port="8005"/<Server port="-1"/' \
+    -e 's/port="8080"/address="0.0.0.0" port="${http.port}"/' "$CATALINA_HOME/conf/server.xml" \
     && rm -rf "$CATALINA_HOME/webapps/"*
 COPY --from=build /app/target/msm.war "$CATALINA_HOME/webapps/ROOT.war"
+COPY docker/entrypoint.sh /usr/local/bin/msm-entrypoint.sh
 EXPOSE 10000
-CMD ["catalina.sh", "run"]
+CMD ["sh", "/usr/local/bin/msm-entrypoint.sh"]

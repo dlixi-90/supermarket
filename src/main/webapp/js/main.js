@@ -1,19 +1,16 @@
-// Menu Open Close
-let menuIcon = document.querySelector(".menu-icon");
-let navLinks = document.querySelector(".nav-links");
+const menuIcon = document.querySelector(".menu-icon");
+const navLinks = document.querySelector(".nav-links");
 
-menuIcon.onclick = () => {
-  menuIcon.classList.toggle("move");
-  navLinks.classList.toggle("open-menu");
+const setMenuOpen = (open) => {
+  menuIcon?.classList.toggle("move", open);
+  menuIcon?.setAttribute("aria-expanded", String(open));
+  navLinks?.classList.toggle("open-menu", open);
 };
-// Close Menu On Scroll
-window.onscroll = () => {
-  menuIcon.classList.remove("move");
-  navLinks.classList.remove("open-menu");
-};
-// Header
-let header = document.querySelector("header");
 
+menuIcon?.addEventListener("click", () => setMenuOpen(menuIcon.getAttribute("aria-expanded") !== "true"));
+
+const header = document.querySelector("header");
 window.addEventListener("scroll", () => {
-  header.classList.toggle("shadow", window.scrollY > 0);
-});
+  setMenuOpen(false);
+  header?.classList.toggle("shadow", window.scrollY > 0);
+}, { passive: true });

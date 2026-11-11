@@ -5,10 +5,11 @@ import com.market.dao.ProductDAO;
 import com.market.model.CartItem;
 import com.market.model.CheckoutData;
 import com.market.model.Product;
+import com.market.util.CartState;
+import java.util.UUID;
 
 import java.io.IOException;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -42,6 +43,8 @@ public class CheckoutServlet extends HttpServlet {
 
         HttpSession session
                 = request.getSession(false);
+
+        CartState.invalidateReview(session);
 
         String checkoutError
                 = (String) session.getAttribute(
@@ -165,6 +168,8 @@ public class CheckoutServlet extends HttpServlet {
 
         HttpSession session
                 = request.getSession(false);
+
+        CartState.invalidateReview(session);
 
         Map<String, CartItem> cart
                 = getCart(session);
@@ -382,6 +387,11 @@ public class CheckoutServlet extends HttpServlet {
                 true
         );
 
+        String checkoutToken = UUID.randomUUID().toString();
+        session.setAttribute("checkoutToken", checkoutToken);
+        session.setAttribute("checkoutCartSignature", CartState.signature(cart));
+        request.setAttribute("checkoutToken", checkoutToken);
+
         showCheckout(
                 request,
                 response,
@@ -473,7 +483,7 @@ public class CheckoutServlet extends HttpServlet {
                         cart
                 );
 
-        int quantity
+        long quantity
                 = calculateQuantity(
                         cart
                 );
@@ -528,32 +538,9 @@ public class CheckoutServlet extends HttpServlet {
     // =====================================
     // GET CART
     // =====================================
-    @SuppressWarnings("unchecked")
     private Map<String, CartItem> getCart(
             HttpSession session) {
-
-        if (session == null) {
-
-            return new LinkedHashMap<>();
-        }
-
-        Map<String, CartItem> cart
-                = (Map<String, CartItem>) session.getAttribute(
-                        "cart"
-                );
-
-        if (cart == null) {
-
-            cart
-                    = new LinkedHashMap<>();
-
-            session.setAttribute(
-                    "cart",
-                    cart
-            );
-        }
-
-        return cart;
+        return CartState.copy(session);
     }
 
     // =====================================
@@ -577,10 +564,10 @@ public class CheckoutServlet extends HttpServlet {
     // =====================================
     // QUANTITY
     // =====================================
-    private int calculateQuantity(
+    private long calculateQuantity(
             Map<String, CartItem> cart) {
 
-        int total = 0;
+        long total = 0;
 
         for (CartItem item
                 : cart.values()) {
@@ -624,9 +611,8 @@ public class CheckoutServlet extends HttpServlet {
             return false;
         }
 
-        return phone.matches(
-                "^[0-9+() .-]+$"
-        );
+        return phone.matches("^\\+?[0-9() .-]+$")
+                && phone.replaceAll("[^0-9]", "").matches("[0-9]{8,15}");
     }
 
     // =====================================

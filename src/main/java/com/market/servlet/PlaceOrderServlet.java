@@ -4,6 +4,7 @@ import com.market.dao.OrderDAO;
 
 import com.market.model.CartItem;
 import com.market.model.CheckoutData;
+import com.market.util.CartState;
 
 import java.io.IOException;
 
@@ -103,6 +104,14 @@ public class PlaceOrderServlet extends HttpServlet {
 
         try {
 
+            String token = request.getParameter("checkoutToken");
+            if (token == null || !token.equals(session.getAttribute("checkoutToken"))
+                    || !CartState.signature(cart).equals(session.getAttribute("checkoutCartSignature"))) {
+                session.setAttribute("checkoutError", "Giỏ hàng hoặc thông tin xác nhận đã thay đổi. Vui lòng xác nhận lại đơn hàng.");
+                response.sendRedirect(request.getContextPath() + "/checkout");
+                return;
+            }
+
             // =================================
             // PLACE ORDER
             // =================================
@@ -126,6 +135,7 @@ public class PlaceOrderServlet extends HttpServlet {
             session.removeAttribute(
                     "checkoutData"
             );
+            CartState.invalidateReview(session);
 
 
             /*
@@ -148,6 +158,7 @@ public class PlaceOrderServlet extends HttpServlet {
 
         } catch (IllegalArgumentException
                 | IllegalStateException e) {
+            CartState.invalidateReview(session);
 
 
             /*

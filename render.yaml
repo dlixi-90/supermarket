@@ -3,6 +3,7 @@ services:
     name: supermarket
     runtime: docker
     plan: free
+    healthCheckPath: /health
     envVars:
       - key: MONGODB_URI
         sync: false

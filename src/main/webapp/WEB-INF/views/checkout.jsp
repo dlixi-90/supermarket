@@ -40,8 +40,8 @@
                     "cartTotal"
             );
 
-    Integer cartQuantity
-            = (Integer) request.getAttribute(
+    Number cartQuantity
+            = (Number) request.getAttribute(
                     "cartQuantity"
             );
 
@@ -343,6 +343,7 @@
                         method="post"
                         action="<%=request.getContextPath()%>/place-order"
                         >
+                        <input type="hidden" name="checkoutToken" value="<%=escapeHtml((String) request.getAttribute("checkoutToken"))%>">
                         <a
                             class="button secondary"
                             href="<%=request.getContextPath()%>/checkout"

@@ -3,6 +3,7 @@ package com.market.servlet;
 import com.market.dao.UserDAO;
 import com.market.model.User;
 import com.market.util.PasswordUtil;
+import com.market.util.CartState;
 
 import java.io.IOException;
 import java.util.Map;
@@ -185,13 +186,12 @@ public class LoginServlet extends HttpServlet {
                     ? null
                     : oldSession.getAttribute("redirectAfterLogin");
 
-            if (oldSession != null) {
-
-                oldSession.invalidate();
-            }
-
             HttpSession session
                     = request.getSession(true);
+            request.changeSessionId();
+            CartState.invalidateReview(session);
+            session.removeAttribute("checkoutData");
+            session.removeAttribute("redirectAfterLogin");
 
             // =================================
             // ONLY SAFE SESSION VALUES
@@ -216,10 +216,6 @@ public class LoginServlet extends HttpServlet {
                     user.getRole()
             );
 
-            if (savedCart != null) {
-                session.setAttribute("cart", savedCart);
-            }
-
             // 30 phút
             session.setMaxInactiveInterval(
                     30 * 60
@@ -231,7 +227,8 @@ public class LoginServlet extends HttpServlet {
             String destination;
             String contextPath = request.getContextPath();
             if (redirectAfterLogin instanceof String
-                    && ((String) redirectAfterLogin).startsWith(contextPath)) {
+                    && (((String) redirectAfterLogin).equals(contextPath + "/checkout")
+                    || ((String) redirectAfterLogin).equals(contextPath + "/my-orders"))) {
                 destination = ((String) redirectAfterLogin).substring(contextPath.length());
                 if (!destination.startsWith("/")) {
                     destination = "/" + destination;
