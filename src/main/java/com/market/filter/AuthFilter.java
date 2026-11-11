@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 
 @WebFilter(
         urlPatterns = {
-            "/cart",
             "/checkout",
             "/place-order",
             "/my-orders"
