@@ -1595,6 +1595,54 @@ body[data-page="home"] .filter-btn {
   flex: 0 0 auto;
   margin: 0;
 }
+.msm-product .category-list-heading {
+  flex-wrap: wrap;
+}
+.category-list-heading > .product-list-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  width: min(100%, 484px);
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-left: auto;
+  min-width: 0;
+}
+.inventory-search {
+  position: relative;
+  flex: 1 1 240px;
+  min-width: 0;
+  max-width: 300px;
+}
+.msm-content .inventory-search input[type="search"] {
+  padding-right: 44px;
+}
+.msm-content .inventory-search button {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  color: var(--main-color);
+  box-shadow: none;
+  font-size: 1.2rem;
+}
+@media (max-width: 600px) {
+  .category-list-heading > .product-list-actions {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    margin-left: 0;
+  }
+  .inventory-search {
+    max-width: none;
+  }
+  .product-list-actions > .category-add-button {
+    justify-self: end;
+  }
+}
 .category-dialog {
   position: fixed;
   top: 50%;

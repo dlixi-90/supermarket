@@ -8,7 +8,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý người dùng | Growcer</title>
+    <title>Quản lý người dùng</title>
     <jsp:include page="/WEB-INF/views/includes/styles.jsp" />
 </head>
 <body class="msm-page msm-user">

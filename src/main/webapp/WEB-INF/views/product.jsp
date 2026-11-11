@@ -10,6 +10,13 @@
 <%
     List<Product> products = (List<Product>) request.getAttribute("products");
     List<Category> categories = (List<Category>) request.getAttribute("categories");
+    int totalProducts = (Integer) request.getAttribute("totalProducts");
+    int currentPage = (Integer) request.getAttribute("currentPage");
+    int totalPages = (Integer) request.getAttribute("totalPages");
+    boolean lowStockOnly = Boolean.TRUE.equals(request.getAttribute("lowStockOnly"));
+    String searchQuery = request.getAttribute("searchQuery") instanceof String ? (String) request.getAttribute("searchQuery") : "";
+    String searchParameter = searchQuery.isEmpty() ? "" : "q=" + java.net.URLEncoder.encode(searchQuery, java.nio.charset.StandardCharsets.UTF_8) + "&";
+    String paginationUrl = request.getContextPath() + "/products?" + searchParameter + (lowStockOnly ? "stock=low&" : "") + "page=";
     Product editProduct = (Product) request.getAttribute("editProduct");
     boolean editing = editProduct != null;
     boolean submitted = Boolean.TRUE.equals(request.getAttribute("formSubmitted"));
@@ -28,7 +35,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý sản phẩm | Growcer</title>
+    <title>Quản lý sản phẩm</title>
     <jsp:include page="/WEB-INF/views/includes/styles.jsp" />
 </head>
 <body class="msm-page msm-product">
@@ -40,12 +47,19 @@
         <div class="management-layout product-management-layout">
             <section class="management-list" aria-labelledby="product-list">
                 <div class="section-header category-list-heading">
-                    <div><h2 id="product-list">Danh sách sản phẩm</h2><span class="small"><%= products == null ? 0 : products.size() %> sản phẩm</span></div>
-                    <button class="save-button category-add-button" type="button" id="add-product-button"><i class="ri-add-line" aria-hidden="true"></i>Thêm sản phẩm</button>
+                    <div><h2 id="product-list">Danh sách sản phẩm</h2><span class="small"><%= totalProducts %> sản phẩm</span></div>
+                    <div class="product-list-actions">
+                        <form class="inventory-search" role="search" method="get" action="<%= request.getContextPath() %>/products">
+                            <% if (lowStockOnly) { %><input type="hidden" name="stock" value="low"><% } %>
+                            <input type="search" name="q" value="<%= ViewUtil.escapeHtml(searchQuery) %>" placeholder="Tìm tên sản phẩm..." aria-label="Tìm sản phẩm trong kho">
+                            <button type="submit" aria-label="Tìm kiếm sản phẩm"><i class="ri-search-line" aria-hidden="true"></i></button>
+                        </form>
+                        <button class="save-button category-add-button" type="button" id="add-product-button"><i class="ri-add-line" aria-hidden="true"></i>Thêm sản phẩm</button>
+                    </div>
                 </div>
                 <nav class="list-filters" aria-label="Lọc sản phẩm trong kho">
-                    <a href="<%= request.getContextPath() %>/products#product-list" aria-current="<%= !Boolean.TRUE.equals(request.getAttribute("lowStockOnly")) ? "page" : "false" %>">Tất cả sản phẩm</a>
-                    <a href="<%= request.getContextPath() %>/products?stock=low#product-list" aria-current="<%= Boolean.TRUE.equals(request.getAttribute("lowStockOnly")) ? "page" : "false" %>">Sắp hết hàng</a>
+                    <a href="<%= ViewUtil.escapeHtml(request.getContextPath() + "/products?" + searchParameter + "page=1") %>#product-list" aria-current="<%= !lowStockOnly ? "page" : "false" %>">Tất cả sản phẩm</a>
+                    <a href="<%= ViewUtil.escapeHtml(request.getContextPath() + "/products?" + searchParameter + "stock=low&page=1") %>#product-list" aria-current="<%= lowStockOnly ? "page" : "false" %>">Sắp hết hàng</a>
                 </nav>
                 <div class="inventory-grid">
                     <% if (products != null && !products.isEmpty()) { for (Product product : products) {
@@ -71,6 +85,8 @@
                                 <div><dt>Hạn sử dụng</dt><dd><%= product.getExpiryDate() == null ? "Chưa đặt" : dateFormat.format(product.getExpiryDate()) %></dd></div>
                             </dl>
                             <form class="product-active-form" method="post" action="<%= request.getContextPath() %>/products">
+                                <input type="hidden" name="q" value="<%= ViewUtil.escapeHtml(searchQuery) %>">
+                                <input type="hidden" name="page" value="<%= currentPage %>">
                                 <input type="hidden" name="action" value="set-active">
                                 <input type="hidden" name="id" value="<%= ViewUtil.escapeHtml(product.getId()) %>">
                                 <% if (Boolean.TRUE.equals(request.getAttribute("lowStockOnly"))) { %><input type="hidden" name="stockFilter" value="low"><% } %>
@@ -92,14 +108,41 @@
                                     data-image="<%= ViewUtil.escapeHtml(image) %>"
                                     data-active="<%= product.isActive() %>"><i class="ri-edit-line" aria-hidden="true"></i>Sửa</button>
                                 <form method="post" action="<%= request.getContextPath() %>/products" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này không?');">
+                                    <input type="hidden" name="q" value="<%= ViewUtil.escapeHtml(searchQuery) %>">
+                                    <input type="hidden" name="page" value="<%= currentPage %>">
+                                    <% if (lowStockOnly) { %><input type="hidden" name="stockFilter" value="low"><% } %>
                                     <input type="hidden" name="id" value="<%= ViewUtil.escapeHtml(product.getId()) %>">
                                     <button class="delete-button" type="submit" name="action" value="delete"><i class="ri-delete-bin-line" aria-hidden="true"></i>Xóa</button>
                                 </form>
                             </div>
                         </div>
                     </article>
-                    <% } } else { %><p class="inventory-empty">Chưa có sản phẩm nào.</p><% } %>
+                    <% } } else { %><p class="inventory-empty"><%= searchQuery.isEmpty() ? "Chưa có sản phẩm nào." : "Không tìm thấy sản phẩm phù hợp." %></p><% } %>
                 </div>
+                <% if (totalProducts > 0) { %>
+                <p class="small">Hiển thị <%= request.getAttribute("firstProduct") %>–<%= request.getAttribute("lastProduct") %> trên tổng <%= totalProducts %> sản phẩm</p>
+                <% } %>
+                <% if (totalPages > 1) { %>
+                <nav class="shop-pagination" aria-label="Phân trang quản lý sản phẩm">
+                    <% if (currentPage > 1) { %>
+                    <a class="shop-page-button" href="<%= ViewUtil.escapeHtml(paginationUrl + (currentPage - 1)) %>#product-list" aria-label="Trang trước">‹</a>
+                    <% } else { %>
+                    <button class="shop-page-button" type="button" disabled aria-label="Trang trước">‹</button>
+                    <% } %>
+                    <% int previousPage = 0; for (int pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
+                        if (pageNumber != 1 && pageNumber != totalPages && Math.abs(pageNumber - currentPage) > 2) continue;
+                        if (previousPage > 0 && pageNumber - previousPage > 1) { %>
+                    <span class="shop-page-ellipsis" aria-hidden="true">…</span>
+                    <% } previousPage = pageNumber; %>
+                    <a class="shop-page-button<%= pageNumber == currentPage ? " active" : "" %>" href="<%= ViewUtil.escapeHtml(paginationUrl + pageNumber) %>#product-list" aria-label="Trang <%= pageNumber %>" <%= pageNumber == currentPage ? "aria-current=\"page\"" : "" %>><%= pageNumber %></a>
+                    <% } %>
+                    <% if (currentPage < totalPages) { %>
+                    <a class="shop-page-button" href="<%= ViewUtil.escapeHtml(paginationUrl + (currentPage + 1)) %>#product-list" aria-label="Trang sau">›</a>
+                    <% } else { %>
+                    <button class="shop-page-button" type="button" disabled aria-label="Trang sau">›</button>
+                    <% } %>
+                </nav>
+                <% } %>
             </section>
         </div>
         <dialog class="category-dialog product-dialog" id="product-dialog" aria-labelledby="product-form-title" data-open-on-load="<%= error != null || editing ? "true" : "false" %>">
@@ -110,6 +153,9 @@
             <aside class="form-box management-form">
                 <% if (error != null) { %><div class="error" role="alert"><%= ViewUtil.escapeHtml(error) %><p class="small">Nếu đã chọn ảnh, vui lòng chọn lại trước khi gửi biểu mẫu.</p></div><% } %>
                 <form id="product-form" method="post" action="<%= request.getContextPath() %>/products" enctype="multipart/form-data">
+                    <input type="hidden" name="q" value="<%= ViewUtil.escapeHtml(searchQuery) %>">
+                    <input type="hidden" name="page" value="<%= currentPage %>">
+                    <% if (lowStockOnly) { %><input type="hidden" name="stockFilter" value="low"><% } %>
                     <input id="product-edit-id" type="hidden" name="id" value="<%= editing ? ViewUtil.escapeHtml(editProduct.getId()) : "" %>">
                     <label for="product-name">Tên sản phẩm</label>
                     <input id="product-name" type="text" name="name" required value="<%= ViewUtil.escapeHtml(name) %>">

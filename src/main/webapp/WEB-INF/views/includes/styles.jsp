@@ -5,5 +5,5 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=cart-layout-20261111">
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=inventory-search-20261111">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css">
