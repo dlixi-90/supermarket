@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: supermarket
+    runtime: docker
+    plan: free
+    envVars:
+      - key: MONGODB_URI
+        sync: false
