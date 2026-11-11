@@ -12,7 +12,7 @@
     }
     int homeCategoryLimit = categories == null ? 0 : categories.size();
     int homeFilterCategoryLimit = 8;
-    int homeProductLimit = 8;
+    int homeProductLimit = 10;
 %>
 <!doctype html>
 <html lang="vi">
