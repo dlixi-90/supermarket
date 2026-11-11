@@ -1302,6 +1302,26 @@ body[data-page="home"] .filter-btn {
 .msm-content .summary-buttons .primary {
   margin: 0;
 }
+.msm-cart .cart-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: start;
+  gap: 1.5rem;
+}
+.msm-cart .cart-layout > .table-scroll {
+  min-width: 0;
+  margin: 0;
+}
+.msm-cart .cart-layout > .summary {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+@media (max-width: 1000px) {
+  .msm-cart .cart-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 .msm-content .checkout-layout {
   display: grid;
   grid-template-columns: 1.2fr 1fr;

@@ -103,6 +103,7 @@
 
     %>
 
+    <div class="cart-layout">
     <div class="table-scroll"><table>
 
         <thead>
@@ -309,7 +310,7 @@
 
     <!-- SUMMARY -->
 
-    <div class="summary">
+    <aside class="summary" aria-label="Tổng kết giỏ hàng">
 
         <div>
 
@@ -387,6 +388,7 @@
 
         </div>
 
+    </aside>
     </div>
 
     <%
