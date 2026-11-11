@@ -2525,6 +2525,13 @@ body[data-page="home"] .filter-btn {
   opacity: 0.42;
   cursor: not-allowed;
 }
+.shop-page-ellipsis {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 42px;
+  color: var(--main-color);
+}
 .home-category-heading {
   margin-bottom: 0;
 }

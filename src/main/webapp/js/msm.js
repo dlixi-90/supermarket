@@ -323,7 +323,27 @@ if (shopSidebar) {
       pagination.appendChild(button);
     };
     makeButton('‹', currentPage - 1, { disabled: currentPage === 1, ariaLabel: 'Trang trước' });
-    for (let page = 1; page <= pageCount; page++) makeButton(String(page), page, { current: page === currentPage, ariaLabel: `Trang ${page}` });
+    let pageItems;
+    if (pageCount <= 5) {
+      pageItems = Array.from({ length: pageCount }, (_, index) => index + 1);
+    } else if (currentPage <= 3) {
+      pageItems = [1, 2, 3, 'ellipsis', pageCount];
+    } else if (currentPage >= pageCount - 2) {
+      pageItems = [1, 'ellipsis', pageCount - 2, pageCount - 1, pageCount];
+    } else {
+      pageItems = [1, 'ellipsis', currentPage - 1, currentPage, currentPage + 1, 'ellipsis', pageCount];
+    }
+    pageItems.forEach(page => {
+      if (page === 'ellipsis') {
+        const ellipsis = document.createElement('span');
+        ellipsis.className = 'shop-page-ellipsis';
+        ellipsis.textContent = '…';
+        ellipsis.setAttribute('aria-hidden', 'true');
+        pagination.appendChild(ellipsis);
+      } else {
+        makeButton(String(page), page, { current: page === currentPage, ariaLabel: `Trang ${page}` });
+      }
+    });
     makeButton('›', currentPage + 1, { disabled: currentPage === pageCount, ariaLabel: 'Trang sau' });
   };
   const updateShop = (resetPage = true) => {
