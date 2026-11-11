@@ -203,11 +203,7 @@
     </section>
     <!-- Footer -->
     <jsp:include page="/WEB-INF/views/includes/footer.jsp" />
-    <!-- Scroll Reveal Animation -->
-
     <!-- Link To JS -->
-
-    <script defer src="https://unpkg.com/scrollreveal"></script>
     <jsp:include page="/WEB-INF/views/includes/scripts.jsp" />
   </body>
 </html>
