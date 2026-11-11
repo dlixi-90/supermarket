@@ -66,7 +66,6 @@
                     <% } else { %>
                     <img src="<%= ViewUtil.escapeHtml(imageUrl) %>" alt="<%= ViewUtil.escapeHtml(product.getName()) %>" class="product-img" loading="lazy" decoding="async">
                     <% } %>
-                    <span class="category"><%= ViewUtil.escapeHtml(product.getCategoryName()) %></span>
                     <h3><%= ViewUtil.escapeHtml(product.getName()) %></h3>
                     <%-- Template rating matches Home; Product has no review data yet. --%>
                     <div class="rating" aria-label="Đánh giá mẫu: 4,5 trên 5">

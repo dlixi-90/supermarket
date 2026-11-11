@@ -35,9 +35,9 @@
                     "cart"
             );
 
-    Long cartTổng cộng
+    Long cartTotal
             = (Long) request.getAttribute(
-                    "cartTổng cộng"
+                    "cartTotal"
             );
 
     Integer cartQuantity
@@ -459,9 +459,9 @@
 
                             <%=String.format(
                                     "%,d",
-                                    cartTổng cộng == null
+                                    cartTotal == null
                                     ? 0L
-                                    : cartTổng cộng
+                                    : cartTotal
                     )%>
 
                             VNĐ

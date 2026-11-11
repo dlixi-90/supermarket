@@ -2,6 +2,7 @@
 
 <%@ page import="java.util.Map" %>
 <%@ page import="com.market.model.CartItem" %>
+<%@ page import="com.market.util.ViewUtil" %>
 
 <%!
 
@@ -136,34 +137,12 @@
 
                 <%
 
-                    String imageUrl =
-                            item.getImageUrl();
+                    String finalImageUrl = ViewUtil.resolveImageUrl(
+                            item.getImageUrl(),
+                            request.getContextPath()
+                    );
 
-                    if (imageUrl != null
-                            && !imageUrl
-                                .trim()
-                                .isEmpty()) {
-
-                        String finalImageUrl;
-
-                        if (imageUrl.startsWith(
-                                    "http://"
-                                )
-                                || imageUrl.startsWith(
-                                    "https://"
-                                )) {
-
-                            finalImageUrl =
-                                    imageUrl;
-
-                        } else {
-
-                            finalImageUrl =
-                                    request
-                                        .getContextPath()
-                                    + "/"
-                                    + imageUrl;
-                        }
+                    if (!finalImageUrl.isEmpty()) {
 
                 %>
 

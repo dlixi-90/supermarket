@@ -439,20 +439,20 @@ public class CheckoutServlet extends HttpServlet {
             // OUT OF STOCK
             if (product.getStock() <= 0) {
 
-                return "Product \""
+                return "Sản phẩm \""
                         + product.getName()
-                        + "\" is out of stock.";
+                        + "\" đã hết hàng.";
             }
 
             // NOT ENOUGH STOCK
             if (item.getQuantity()
                     > product.getStock()) {
 
-                return "Only "
-                        + product.getStock()
-                        + " item(s) of \""
+                return "Sản phẩm \""
                         + product.getName()
-                        + "\" are currently available.";
+                        + "\" hiện chỉ còn "
+                        + product.getStock()
+                        + " sản phẩm trong kho.";
             }
         }
 

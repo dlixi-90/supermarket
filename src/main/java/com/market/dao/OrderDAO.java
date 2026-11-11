@@ -203,8 +203,7 @@ public class OrderDAO {
             if (productDoc == null) {
 
                 throw new IllegalStateException(
-                        "A product in your cart "
-                        + "hiện không còn được bán."
+                        "Sản phẩm trong giỏ hàng hiện không còn được bán."
                 );
             }
 
@@ -253,10 +252,9 @@ public class OrderDAO {
                     != cartItem.getPrice()) {
 
                 throw new IllegalStateException(
-                        "The price of \""
+                        "Giá của sản phẩm \""
                         + productName
-                        + "\" has changed. "
-                        + "Vui lòng kiểm tra lại giỏ hàng."
+                        + "\" vừa thay đổi. Vui lòng kiểm tra lại giỏ hàng."
                 );
             }
 
@@ -267,11 +265,11 @@ public class OrderDAO {
                     < quantity) {
 
                 throw new IllegalStateException(
-                        "Only "
-                        + currentStock
-                        + " item(s) of \""
+                        "Sản phẩm \""
                         + productName
-                        + "\" are currently available."
+                        + "\" hiện chỉ còn "
+                        + currentStock
+                        + " sản phẩm trong kho."
                 );
             }
 

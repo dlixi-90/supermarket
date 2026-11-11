@@ -51,6 +51,19 @@ public class CartServlet extends HttpServlet {
         Map<String, CartItem> cart =
                 getCart(session);
 
+        if (session != null) {
+            for (CartItem item : cart.values()) {
+                if (item.getImageUrl() == null
+                        || item.getImageUrl().isBlank()) {
+                    Product product = productDAO.getById(item.getProductId());
+                    if (product != null) {
+                        item.setImageUrl(product.getImageUrl());
+                    }
+                }
+            }
+            session.setAttribute("cart", cart);
+        }
+
 
         // =================================
         // TOTAL

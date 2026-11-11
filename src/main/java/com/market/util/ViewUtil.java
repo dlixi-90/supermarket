@@ -24,6 +24,28 @@ public class ViewUtil {
                 .replace("'", "&#39;");
     }
 
+    public static String resolveImageUrl(
+            String imageUrl,
+            String contextPath) {
+
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return "";
+        }
+
+        String value = imageUrl.trim();
+        if (value.startsWith("https://") || value.startsWith("http://")) {
+            return value;
+        }
+
+        String relativePath = value.replaceFirst("^/+", "");
+        if (relativePath.isBlank()) {
+            return "";
+        }
+
+        String context = contextPath == null ? "" : contextPath.trim();
+        return context + "/" + relativePath;
+    }
+
 
     // =====================================
     // ORDER STATUS CSS
