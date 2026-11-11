@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 
 @WebFilter(
         urlPatterns = {
+            "/cart",
             "/checkout",
             "/place-order",
             "/my-orders"
@@ -76,6 +77,32 @@ public class AuthFilter implements Filter {
                 ) != null;
 
         if (!loggedIn) {
+
+            if ("/cart".equals(httpRequest.getServletPath())
+                    && "POST".equalsIgnoreCase(httpRequest.getMethod())
+                    && "add".equals(httpRequest.getParameter("action"))) {
+                HttpSession pendingSession = httpRequest.getSession(true);
+                pendingSession.setAttribute(
+                        "pendingCartProductId",
+                        httpRequest.getParameter("productId")
+                );
+                pendingSession.setAttribute(
+                        "pendingCartQuantity",
+                        httpRequest.getParameter("quantity")
+                );
+
+                if ("XMLHttpRequest".equalsIgnoreCase(
+                        httpRequest.getHeader("X-Requested-With"))) {
+                    httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    httpResponse.setContentType("application/json; charset=UTF-8");
+                    httpResponse.setCharacterEncoding("UTF-8");
+                    httpResponse.getWriter().write(
+                            "{\"success\":false,\"requiresLogin\":true,\"loginUrl\":\""
+                                    + httpRequest.getContextPath() + "/login\"}"
+                    );
+                    return;
+                }
+            }
 
             httpResponse.sendRedirect(
                     httpRequest.getContextPath()

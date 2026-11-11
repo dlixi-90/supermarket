@@ -176,6 +176,13 @@ public class LoginServlet extends HttpServlet {
             HttpSession oldSession
                     = request.getSession(false);
 
+            Object pendingCartProductId = oldSession == null
+                    ? null
+                    : oldSession.getAttribute("pendingCartProductId");
+            Object pendingCartQuantity = oldSession == null
+                    ? null
+                    : oldSession.getAttribute("pendingCartQuantity");
+
             if (oldSession != null) {
 
                 oldSession.invalidate();
@@ -207,6 +214,11 @@ public class LoginServlet extends HttpServlet {
                     user.getRole()
             );
 
+            if (pendingCartProductId != null && pendingCartQuantity != null) {
+                session.setAttribute("pendingCartProductId", pendingCartProductId);
+                session.setAttribute("pendingCartQuantity", pendingCartQuantity);
+            }
+
             // 30 phút
             session.setMaxInactiveInterval(
                     30 * 60
@@ -217,10 +229,10 @@ public class LoginServlet extends HttpServlet {
             //
             // Admin và Customer đều về /home
             // =================================
-            response.sendRedirect(
-                    request.getContextPath()
-                    + "/home"
-            );
+            String destination = pendingCartProductId != null && pendingCartQuantity != null
+                    ? "/cart"
+                    : "/home";
+            response.sendRedirect(request.getContextPath() + destination);
 
         } catch (Exception e) {
 

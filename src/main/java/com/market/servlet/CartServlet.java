@@ -50,6 +50,24 @@ public class CartServlet extends HttpServlet {
         HttpSession session =
                 request.getSession(false);
 
+        if (session != null
+                && session.getAttribute("pendingCartProductId") != null
+                && session.getAttribute("pendingCartQuantity") != null) {
+            String pendingProductId = (String) session.getAttribute("pendingCartProductId");
+            String pendingQuantity = (String) session.getAttribute("pendingCartQuantity");
+            session.removeAttribute("pendingCartProductId");
+            session.removeAttribute("pendingCartQuantity");
+
+            try {
+                addToCart(pendingProductId, pendingQuantity, session);
+                session.setAttribute("cartItemAdded", Boolean.TRUE);
+                response.sendRedirect(request.getContextPath() + "/cart");
+                return;
+            } catch (IllegalArgumentException e) {
+                request.setAttribute("error", e.getMessage());
+            }
+        }
+
 
         Map<String, CartItem> cart =
                 getCart(session);
@@ -251,18 +269,17 @@ public class CartServlet extends HttpServlet {
     private void addToCart(
             HttpServletRequest request) {
 
+        addToCart(
+                request.getParameter("productId"),
+                request.getParameter("quantity"),
+                request.getSession()
+        );
+    }
 
-        String productId =
-                request.getParameter(
-                        "productId"
-                );
-
-
-        String quantityString =
-                request.getParameter(
-                        "quantity"
-                );
-
+    private void addToCart(
+            String productId,
+            String quantityString,
+            HttpSession session) {
 
         if (productId == null
                 || !ObjectId.isValid(
@@ -315,10 +332,6 @@ public class CartServlet extends HttpServlet {
                     "Sản phẩm đã hết hàng."
             );
         }
-
-
-        HttpSession session =
-                request.getSession();
 
 
         Map<String, CartItem> cart =

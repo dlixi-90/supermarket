@@ -90,8 +90,8 @@ document.addEventListener('submit', async (event) => {
   if (submitButton) submitButton.disabled = true;
 
   try {
-    const formData = new FormData(form);
-    if (event.submitter?.name) formData.set(event.submitter.name, event.submitter.value);
+    const formData = new URLSearchParams(new FormData(form));
+    formData.set('action', 'add');
     const response = await fetch(form.action, {
       method: 'POST',
       body: formData,
@@ -99,6 +99,10 @@ document.addEventListener('submit', async (event) => {
       headers: { 'X-Requested-With': 'XMLHttpRequest' }
     });
     const result = await response.json();
+    if (result.requiresLogin && result.loginUrl) {
+      window.location.assign(result.loginUrl);
+      return;
+    }
     if (!response.ok || !result.success) {
       throw new Error(result.message || 'Không thể thêm sản phẩm vào giỏ hàng.');
     }
