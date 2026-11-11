@@ -244,7 +244,7 @@ document.querySelectorAll(".filter-buttons").forEach((group) => {
       cards.forEach((card) => {
         const cardCategory = card.dataset.category || normalize(card.querySelector(".category").textContent);
         const matchesCategory = category === "all" || cardCategory === category;
-        card.hidden = !matchesCategory || (category === "all" && visible >= productLimit);
+        card.hidden = !matchesCategory || visible >= productLimit;
         if (!card.hidden) visible++;
       });
       const empty = section.querySelector(".shop-empty");

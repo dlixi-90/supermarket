@@ -11,6 +11,7 @@
         }
     }
     int homeCategoryLimit = categories == null ? 0 : categories.size();
+    int homeFilterCategoryLimit = 8;
     int homeProductLimit = 8;
 %>
 <!doctype html>
@@ -138,7 +139,9 @@
       </div>
         <div class="filter-buttons" aria-label="Lọc sản phẩm">
           <button type="button" class="filter-btn active" data-category="all" aria-pressed="true">Tất cả</button>
-          <% for (Category category : categories) { %>
+          <% int filterCategoryIndex = 0; for (Category category : categories) {
+              if (filterCategoryIndex++ >= homeFilterCategoryLimit) break;
+          %>
           <button type="button" class="filter-btn" data-category="<%= ViewUtil.escapeHtml(category.getId()) %>" aria-pressed="false"><%= ViewUtil.escapeHtml(category.getName()) %></button>
           <% } %>
         </div>
