@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Sorts.ascending;
 
 public class CategoryDAO {
 
@@ -35,7 +36,7 @@ public class CategoryDAO {
         List<Category> categories =
                 new ArrayList<>();
 
-        for (Document doc : collection.find()) {
+        for (Document doc : collection.find().sort(ascending("displayOrder", "name"))) {
 
             Category category = new Category();
 
@@ -89,6 +90,8 @@ public class CategoryDAO {
     // =========================
     public void insert(Category category) {
 
+        int nextOrder = (int) collection.countDocuments();
+
         Document document =
                 new Document()
                         .append(
@@ -99,7 +102,8 @@ public class CategoryDAO {
                                 "description",
                                 category.getDescription()
                         )
-                        .append("imageUrl", category.getImageUrl());
+                        .append("imageUrl", category.getImageUrl())
+                        .append("displayOrder", nextOrder);
 
         collection.insertOne(document);
     }

@@ -10,7 +10,7 @@
             categoryColors.put(categories.get(i).getId(), i % 6 + 1);
         }
     }
-    int homeCategoryLimit = 6;
+    int homeCategoryLimit = categories == null ? 0 : categories.size();
     int homeProductLimit = 8;
 %>
 <!doctype html>
