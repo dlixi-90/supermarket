@@ -155,7 +155,6 @@
           <% } else { %>
           <img src="<%= ViewUtil.escapeHtml(imageUrl) %>" alt="<%= ViewUtil.escapeHtml(product.getName()) %>" class="product-img" loading="lazy" decoding="async" />
           <% } %>
-          <span class="category"><%= ViewUtil.escapeHtml(product.getCategoryName()) %></span>
           <h3><%= ViewUtil.escapeHtml(product.getName()) %></h3>
           <div class="product-footer">
             <span class="price"><%= String.format("%,d", product.getPrice()) %> &#8363;</span>
