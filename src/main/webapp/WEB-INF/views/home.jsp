@@ -168,6 +168,7 @@
           <div class="product-footer">
             <span class="price"><%= String.format("%,d", product.getPrice()) %> &#8363;</span>
             <form class="shop-cart-form" method="post" action="<%= request.getContextPath() %>/cart">
+              <input type="hidden" name="returnTo" value="<%= ViewUtil.escapeHtml(request.getRequestURI()) %>" />
               <input type="hidden" name="productId" value="<%= ViewUtil.escapeHtml(product.getId()) %>" />
               <input type="hidden" name="quantity" value="1" />
               <button class="add-to-cart" type="submit" name="action" value="add" aria-label="Thêm <%= ViewUtil.escapeHtml(product.getName()) %> vào giỏ hàng" <%= product.getStock() <= 0 ? "disabled" : "" %>><i class="ri-shopping-bag-line"></i></button>

@@ -78,6 +78,53 @@ document.querySelectorAll(".product-active-form").forEach((form) => {
   form.querySelector('[name="active"]').addEventListener("change", () => form.requestSubmit());
 });
 
+document.addEventListener('submit', async (event) => {
+  const form = event.target.closest('form.shop-cart-form');
+  if (!form) return;
+
+  event.preventDefault();
+  const submitButton = event.submitter || form.querySelector('[name="action"][value="add"]');
+  if (submitButton?.disabled) return;
+
+  const originalDisabled = submitButton?.disabled ?? false;
+  if (submitButton) submitButton.disabled = true;
+
+  try {
+    const formData = new FormData(form);
+    if (event.submitter?.name) formData.set(event.submitter.name, event.submitter.value);
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      credentials: 'same-origin',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Không thể thêm sản phẩm vào giỏ hàng.');
+    }
+
+    const cartLink = document.querySelector('.cart-link');
+    const cartCount = cartLink?.querySelector('.cart-count');
+    if (cartCount) {
+      cartCount.textContent = result.quantity > 99 ? '99+' : String(result.quantity);
+      cartCount.hidden = result.quantity < 1;
+    }
+    if (cartLink) {
+      const label = `Giỏ hàng, ${result.quantity} sản phẩm`;
+      cartLink.setAttribute('aria-label', label);
+      cartLink.setAttribute('title', label);
+      cartLink.classList.remove('cart-link-added');
+      void cartLink.offsetWidth;
+      cartLink.classList.add('cart-link-added');
+    }
+    window.showToast?.(result.message || 'Đã thêm sản phẩm vào giỏ hàng.', 'success');
+  } catch (error) {
+    window.showToast?.(error.message || 'Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.', 'error');
+  } finally {
+    if (submitButton) submitButton.disabled = originalDisabled;
+  }
+});
+
 const categoryDialog = document.getElementById('category-dialog');
 if (categoryDialog) {
   const categoryForm = document.getElementById('category-form');

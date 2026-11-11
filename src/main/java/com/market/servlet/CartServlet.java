@@ -124,13 +124,32 @@ public class CartServlet extends HttpServlet {
                         "action"
                 );
 
+        boolean ajaxRequest = "XMLHttpRequest".equalsIgnoreCase(
+                request.getHeader("X-Requested-With")
+        );
+
 
         try {
 
             if ("add".equals(action)) {
 
                 addToCart(request);
+
+                if (ajaxRequest) {
+                    HttpSession session = request.getSession(false);
+                    long quantity = calculateTotalQuantity(getCart(session));
+                    response.setContentType("application/json; charset=UTF-8");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write(
+                            "{\"success\":true,\"quantity\":" + quantity
+                                    + ",\"message\":\"Đã thêm sản phẩm vào giỏ hàng.\"}"
+                    );
+                    return;
+                }
+
                 request.getSession().setAttribute("cartItemAdded", Boolean.TRUE);
+                response.sendRedirect(getSafeReturnTo(request));
+                return;
 
             } else if ("update".equals(action)) {
 
@@ -154,6 +173,17 @@ public class CartServlet extends HttpServlet {
 
         } catch (IllegalArgumentException e) {
 
+            if (ajaxRequest) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setContentType("application/json; charset=UTF-8");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(
+                        "{\"success\":false,\"message\":\""
+                                + escapeJson(e.getMessage()) + "\"}"
+                );
+                return;
+            }
+
             request.setAttribute(
                     "error",
                     e.getMessage()
@@ -168,11 +198,47 @@ public class CartServlet extends HttpServlet {
 
         } catch (Exception e) {
 
+            if (ajaxRequest) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.setContentType("application/json; charset=UTF-8");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(
+                        "{\"success\":false,\"message\":\"Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.\"}"
+                );
+                return;
+            }
+
             throw new ServletException(
                     "Thao tác giỏ hàng thất bại",
                     e
             );
         }
+    }
+
+    private String escapeJson(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\r", "\\r")
+                .replace("\n", "\\n");
+    }
+
+    private String getSafeReturnTo(HttpServletRequest request) {
+        String returnTo = request.getParameter("returnTo");
+        String contextPath = request.getContextPath();
+        String requiredPrefix = contextPath + "/";
+
+        if (returnTo != null
+                && returnTo.startsWith(requiredPrefix)
+                && !returnTo.startsWith("//")
+                && !returnTo.contains("\r")
+                && !returnTo.contains("\n")) {
+            return returnTo;
+        }
+
+        return contextPath + "/shop";
     }
 
 
