@@ -232,7 +232,7 @@
                                 >
                                 Thanh toán khi nhận hàng (COD)
                             </option>
-
+<!-- 
                             <option
                                 value="QR"
 
@@ -243,7 +243,7 @@
                                     : ""%>
                                 >
                                 Thanh toán bằng mã QR
-                            </option>
+                            </option> -->
 
                         </select>
 
